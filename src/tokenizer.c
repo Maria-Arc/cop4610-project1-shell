@@ -31,12 +31,11 @@ int main() {
     printf("changed to:\n");
     for (int i = 0; i < numTokens; i++) {
       printf("%d: \t %s\n", i, args[i]);
-      needToFree[i] = 0;
     }
 
-    for (int i = 0; i < 100; i++){
+    for (int i = 0; i < 100; i++) {
       if (needToFree[i] > 0)
-          free(args[i]);
+        free(args[i]);
     }
 
     if (args[0] != NULL && strcmp(args[0], "exit") == 0)
@@ -47,6 +46,12 @@ int main() {
 
   return 0;
 }
+
+// To accomplish this, a two-step process is involved. First, you need to fork()
+// to create a child process. The child process will be responsible for
+// executing the desired command using the execv() function. This separation
+// between the parent and child processes ensures that the execution of the
+// command does not interfere with the operation of the shell itself.
 
 // replaces spaces with \0 then points args[i] to start of word
 // args[0] is a ptr that points to 0th word in line and so on
