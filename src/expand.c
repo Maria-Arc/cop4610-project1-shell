@@ -41,11 +41,11 @@ int Path(char **command, int changed[]) {
       changed[0] = 1;
       break;
     }
-    if (changed[0] == 0)
-      printf("%s: Command not found.", *command);
-    free(directories);
-    return changed[0];
   }
+  if (changed[0] == 0)
+    printf("%s: Command not found.", *command);
+  free(directories);
+  return changed[0];
 }
 
 int TildeExpansion(char *args[], int num, int changed[]) {

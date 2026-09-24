@@ -28,6 +28,12 @@ int main() {
     TildeExpansion(args, numTokens, needToFree);
     Path(&args[0], needToFree);
 
+    printf("changed to:\n");
+    for (int i = 0; i < numTokens; i++) {
+      printf("%d: \t %s\n", i, args[i]);
+      needToFree[i] = 0;
+    }
+
     if (args[0] != NULL && strcmp(args[0], "exit") == 0)
       return 0;
 
