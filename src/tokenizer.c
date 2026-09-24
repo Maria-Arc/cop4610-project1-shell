@@ -7,12 +7,12 @@
 #include <unistd.h>
 
 int main() {
-  char line[500];
-  char *args[100];
+  char line[250];
+  char *args[200];
   const char *USER = getenv("USER");
   const char *MACHINE = getenv("MACHINE");
   char *pwd = getenv("PWD");
-  int needToFree[100];
+  int needToFree[250];
   int numTokens;
 
   // USER@MACHINE:PWD>
@@ -33,7 +33,7 @@ int main() {
       printf("%d: \t %s\n", i, args[i]);
     }
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < numTokens; i++) {
       if (needToFree[i] > 0)
         free(args[i]);
     }
