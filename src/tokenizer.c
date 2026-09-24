@@ -34,6 +34,11 @@ int main() {
       needToFree[i] = 0;
     }
 
+    for (int i = 0; i < 100; i++){
+      if (needToFree[i] > 0)
+          free(args[i]);
+    }
+
     if (args[0] != NULL && strcmp(args[0], "exit") == 0)
       return 0;
 
