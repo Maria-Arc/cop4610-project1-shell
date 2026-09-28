@@ -1,64 +1,7 @@
-#include "expand.h"
+// main() has been REMOVED from here and replaced by the real shell loop in the new src/main.c
 #include "shell.h"
-#include "env.h"
-#include "external.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-int main() {
-  char line[250];
-  char *args[200];
-  const char *USER = getenv("USER");
-  const char *MACHINE = getenv("MACHINE");
-  char *pwd = getenv("PWD");
-  int needToFree[250];
-  int numTokens;
-
-  // USER@MACHINE:PWD>
-  printf("%s@%s:%s> ", USER, MACHINE, pwd);
-  while (fgets(line, sizeof(line), stdin) != NULL) {
-
-    numTokens = Tokenize(line, args);
-    for (int i = 0; i < numTokens; i++) {
-      printf("%d: \t %s\n", i, args[i]);
-      needToFree[i] = 0;
-    }
-    EnvExpansion(args, numTokens, needToFree);
-    TildeExpansion(args, numTokens, needToFree);
-
-    if (args[0]!= NULL && strcmp(args[0], "exit")==0)
-    {
-      return 0;
-    }
-    Path(&args[0], needToFree);
-
-    printf("changed to:\n");
-    for (int i = 0; i < numTokens; i++) {
-      printf("%d: \t %s\n", i, args[i]);
-    }
-    ExecuteCommand(args);
-    for (int i = 0; i < numTokens; i++) {
-      if (needToFree[i] > 0)
-        free(args[i]);
-    }
-
-   // if (args[0] != NULL && strcmp(args[0], "exit") == 0)
-    //  return 0;
-
-    printf("%s@%s:%s> ", USER, MACHINE, pwd);
-  }
-
-  return 0;
-}
-
-// To accomplish this, a two-step process is involved. First, you need to fork()
-// to create a child process. The child process will be responsible for
-// executing the desired command using the execv() function. This separation
-// between the parent and child processes ensures that the execution of the
-// command does not interfere with the operation of the shell itself.
 
 // replaces spaces with \0 then points args[i] to start of word
 // args[0] is a ptr that points to 0th word in line and so on
