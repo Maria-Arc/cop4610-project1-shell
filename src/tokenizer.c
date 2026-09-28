@@ -1,5 +1,7 @@
 #include "expand.h"
 #include "shell.h"
+#include "env.h"
+#include "external.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,22 +26,27 @@ int main() {
       printf("%d: \t %s\n", i, args[i]);
       needToFree[i] = 0;
     }
-
+    EnvExpansion(args, numTokens, needToFree);
     TildeExpansion(args, numTokens, needToFree);
+
+    if (args[0]!= NULL && strcmp(args[0], "exit")==0)
+    {
+      return 0;
+    }
     Path(&args[0], needToFree);
 
     printf("changed to:\n");
     for (int i = 0; i < numTokens; i++) {
       printf("%d: \t %s\n", i, args[i]);
     }
-
+    ExecuteCommand(args);
     for (int i = 0; i < numTokens; i++) {
       if (needToFree[i] > 0)
         free(args[i]);
     }
 
-    if (args[0] != NULL && strcmp(args[0], "exit") == 0)
-      return 0;
+   // if (args[0] != NULL && strcmp(args[0], "exit") == 0)
+    //  return 0;
 
     printf("%s@%s:%s> ", USER, MACHINE, pwd);
   }
