@@ -4,7 +4,11 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+// fixed a Path() bug, commands with / were wrongly reported "not found"
 int Path(char **command, int changed[]) {
+  if (strchr(*command, '/'))
+    return 0;
+
   char *ogPath = getenv("PATH");
   if (ogPath == NULL)
     return -1;
@@ -25,8 +29,6 @@ int Path(char **command, int changed[]) {
   }
 
   for (int i = 0; i < numDir; i++) {
-    if (strchr(*command, '/')) // For commands that do not include a slash (/)
-      break;
     strcpy(dircopy, directoryList[i]);
     strcat(dircopy, "/");
     strcat(dircopy, *command);
@@ -43,7 +45,8 @@ int Path(char **command, int changed[]) {
     }
   }
   if (changed[0] == 0)
-    printf("%s: Command not found.", *command);
+    // MERGE: added the missing "\n" and send it to stderr.
+    fprintf(stderr, "%s: Command not found.\n", *command);
   free(directories);
   return changed[0];
 }
@@ -51,6 +54,8 @@ int Path(char **command, int changed[]) {
 int TildeExpansion(char *args[], int num, int changed[]) {
   int change = 0;
   for (int i = 0; i < num; i++) {
+    if (changed[i])
+      continue;
     if (strncmp("~/", args[i], 2) == 0) // need to add whatever comes after /
     {
       char *home = getenv("HOME");
