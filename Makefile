@@ -10,7 +10,7 @@ DIRS := $(OBJ)/ $(BIN)/
 EXEC := $(BIN)/$(EXECUTABLE)
 
 CC := gcc
-CFLAGS := -g -Wall -std=c99 -Wextra -fsanitize=address $(INCS)
+CFLAGS := -g -Wall -std=c99 -Wextra $(INCS)
 LDFLAGS :=
 
 all: $(EXEC)
